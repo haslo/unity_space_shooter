@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Powerdown()
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5.0f);
         _poweredUpShot = false;
     }
 
