@@ -5,10 +5,12 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 4f;
+    private float _speed = 6f;
 
     [SerializeField]
     private GameObject _laserPrefab;
+    [SerializeField]
+    private GameObject _tripleLaserPrefab;
     [SerializeField]
     private Transform _shotsContainer;
 
@@ -20,6 +22,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives;
 
+    [SerializeField]
+    private bool _poweredUpShot;
+
     private SpawnManager _spawnManager;
 
     void Start()
@@ -27,6 +32,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _lives = 3;
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        _poweredUpShot = true;
     }
 
     void Update()
@@ -58,8 +64,16 @@ public class Player : MonoBehaviour
         bool canShoot = Time.time >= _nextFire;
         if (Input.GetKey(KeyCode.Space) && canShoot)
         {
-            GameObject newLaser = Instantiate(_laserPrefab, transform.position + (Vector3.up * 0.8f), Quaternion.identity);
-            newLaser.transform.parent = _shotsContainer;
+            if (_poweredUpShot)
+            {
+                GameObject newLaser = Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
+                newLaser.transform.parent = _shotsContainer;
+            }
+            else
+            {
+                GameObject newLaser = Instantiate(_laserPrefab, transform.position + (Vector3.up * 0.95f), Quaternion.identity);
+                newLaser.transform.parent = _shotsContainer;
+            }
             _nextFire = Time.time + _fireRate;
         }
     }
