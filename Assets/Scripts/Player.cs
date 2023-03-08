@@ -5,11 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private GameObject _tripleLaserPrefab;
+    private GameObject _laserPrefab, _tripleLaserPrefab;
     [SerializeField]
     private Transform _shotsContainer;
+    [SerializeField]
+    private Transform _shieldVisualizer;
 
     private float _nextFire = 0.0f;
     private float _fireRate = 0.2f;
@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
         _tripleShot = false;
         _shielded = false;
         _speedy = false;
+        _shieldVisualizer.gameObject.SetActive(false);
     }
 
     void Update()
@@ -101,6 +102,7 @@ public class Player : MonoBehaviour
     public void ShieldPowerup()
     {
         _shielded = true;
+        _shieldVisualizer.gameObject.SetActive(true);
         StartCoroutine(ShieldPowerdown());
     }
 
@@ -108,6 +110,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _shielded = false;
+        _shieldVisualizer.gameObject.SetActive(false);
     }
 
     public void Damage()
