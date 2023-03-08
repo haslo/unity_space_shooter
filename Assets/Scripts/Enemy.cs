@@ -13,7 +13,6 @@ public class Enemy : MonoBehaviour
         if (_player == null)
         {
             _player = GameObject.Find("Player").GetComponent<Player>();
-            Debug.Log(_player);
         }
     }
 
