@@ -109,13 +109,22 @@ public class Player : MonoBehaviour
     IEnumerator ShieldPowerdown()
     {
         yield return new WaitForSeconds(5.0f);
+        shieldsOff();
+    }
+
+    private void shieldsOff()
+    {
         _shielded = false;
         _shieldVisualizer.gameObject.SetActive(false);
     }
 
     public void Damage()
     {
-        if (!_shielded)
+        if (_shielded)
+        {
+            shieldsOff();
+        }
+        else
         {
             _lives -= 1;
             if (_lives < 1)
