@@ -5,25 +5,19 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 6f;
-
-    [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleLaserPrefab;
     [SerializeField]
     private Transform _shotsContainer;
 
-    [SerializeField]
     private float _nextFire = 0.0f;
-    [SerializeField]
     private float _fireRate = 0.2f;
 
     [SerializeField]
     private int _lives;
-
-    [SerializeField]
-    private bool _poweredUpShot;
+    private float _speed = 6.0f;
+    private bool _tripleShot, _shielded, _speedy;
 
     private SpawnManager _spawnManager;
 
@@ -32,7 +26,9 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _lives = 3;
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        _poweredUpShot = false;
+        _tripleShot = false;
+        _shielded = false;
+        _speedy = false;
     }
 
     void Update()
@@ -46,7 +42,7 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(direction * _speed * (_speedy ? 2.0f : 1.0f) * Time.deltaTime);
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0.0f), 0);
         if (transform.position.x < -11.3f)
@@ -64,7 +60,7 @@ public class Player : MonoBehaviour
         bool canShoot = Time.time >= _nextFire;
         if (Input.GetKey(KeyCode.Space) && canShoot)
         {
-            if (_poweredUpShot)
+            if (_tripleShot)
             {
                 GameObject newLaser = Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
                 newLaser.transform.parent = _shotsContainer;
@@ -74,28 +70,55 @@ public class Player : MonoBehaviour
                 GameObject newLaser = Instantiate(_laserPrefab, transform.position + (Vector3.up * 0.95f), Quaternion.identity);
                 newLaser.transform.parent = _shotsContainer;
             }
-            _nextFire = Time.time + _fireRate;
+            _nextFire = Time.time + _fireRate / (_speedy ? 2.0f : 1.5f);
         }
     }
 
-    public void Powerup()
+    public void SpeedPowerup()
     {
-        _poweredUpShot = true;
-        StartCoroutine(Powerdown());
+        _speedy = true;
+        StartCoroutine(SpeedPowerdown());
     }
 
-    IEnumerator Powerdown()
+    IEnumerator SpeedPowerdown()
     {
         yield return new WaitForSeconds(5.0f);
-        _poweredUpShot = false;
+        _speedy = false;
+    }
+
+    public void TripleShotPowerup()
+    {
+        _tripleShot = true;
+        StartCoroutine(TripleShotPowerdown());
+    }
+
+    IEnumerator TripleShotPowerdown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _tripleShot = false;
+    }
+
+    public void ShieldPowerup()
+    {
+        _shielded = true;
+        StartCoroutine(ShieldPowerdown());
+    }
+
+    IEnumerator ShieldPowerdown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _shielded = false;
     }
 
     public void Damage()
     {
-        _lives -= 1;
-        if (_lives < 1)
+        if (!_shielded)
         {
-            Explode();
+            _lives -= 1;
+            if (_lives < 1)
+            {
+                Explode();
+            }
         }
     }
 

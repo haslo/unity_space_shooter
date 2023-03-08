@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Powerup;
 
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
-    private GameObject _tripleShotPowerupPrefab;
+    private GameObject[] _powerupPrefabs;
     [SerializeField]
-    private Transform _mobsContainer;
-    [SerializeField]
-    private Transform _powerupsContainer;
+    private Transform _mobsContainer, _powerupsContainer;
     private bool _canSpawn;
 
     void Start()
@@ -47,10 +46,10 @@ public class SpawnManager : MonoBehaviour
             if (_canSpawn)
             {
                 Vector3 newPosition = new Vector3(Random.Range(-8f, 8f), 7.5f, 0);
-                GameObject newEnemy = Instantiate(_tripleShotPowerupPrefab, newPosition, Quaternion.identity);
-                newEnemy.transform.parent = _powerupsContainer;
+                GameObject powerup = Instantiate(_powerupPrefabs[(int)Random.Range(0, _powerupPrefabs.Length)], newPosition, Quaternion.identity);
+                powerup.transform.parent = _powerupsContainer;
             }
-            yield return new WaitForSeconds(Random.Range(10f, 15f));
+            yield return new WaitForSeconds(Random.Range(5f, 10f));
         }
     }
 }
