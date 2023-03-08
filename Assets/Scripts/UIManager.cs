@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
-    private TMP_Text _scoreText;
+    private TMP_Text _scoreText, _gameOverText;
     [SerializeField]
     private Sprite[] _liveSprites;
     [SerializeField]
@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-
+        _gameOverText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -31,5 +31,10 @@ public class UIManager : MonoBehaviour
     public void UpdateLives(int newLives)
     {
         _livesDisplay.sprite = _liveSprites[newLives];
+        if (newLives < 1)
+        {
+            _gameOverText.text = "GAME OVER";
+            _gameOverText.gameObject.SetActive(true);
+        }
     }
 }
