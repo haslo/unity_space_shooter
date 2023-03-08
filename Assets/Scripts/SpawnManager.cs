@@ -30,8 +30,8 @@ public class SpawnManager : MonoBehaviour
                 Vector3 newPosition = new Vector3(Random.Range(-8f, 8f), 7.5f, 0);
                 GameObject newEnemy = Instantiate(_enemyPrefab, newPosition, Quaternion.identity);
                 newEnemy.transform.parent = _mobsContainer;
-                yield return new WaitForSeconds(Random.Range(1f, 4f));
             }
+            yield return new WaitForSeconds(Random.Range(1f, 4f));
         }
     }
 }
