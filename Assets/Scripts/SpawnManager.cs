@@ -16,7 +16,7 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnRoutine());
     }
 
-    public void stopSpawning()
+    public void StopSpawning()
     {
         _canSpawn = false;
     }
