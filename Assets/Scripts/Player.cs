@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     private Transform _shotsContainer;
     [SerializeField]
     private Transform _shieldVisualizer;
+    [SerializeField]
+    private GameObject _uiManagerObject;
+    private UIManager _uiManager;
 
     private float _nextFire = 0.0f;
     private float _fireRate = 0.2f;
@@ -18,6 +21,7 @@ public class Player : MonoBehaviour
     private int _lives;
     private float _speed = 6.0f;
     private bool _tripleShot, _shielded, _speedy;
+    private int _score;
 
     private SpawnManager _spawnManager;
 
@@ -30,6 +34,9 @@ public class Player : MonoBehaviour
         _shielded = false;
         _speedy = false;
         _shieldVisualizer.gameObject.SetActive(false);
+        _score = 0;
+        _uiManager = _uiManagerObject.GetComponent<UIManager>();
+        _uiManager.UpdateScore(_score);
     }
 
     void Update()
@@ -138,5 +145,11 @@ public class Player : MonoBehaviour
     {
         _spawnManager.StopSpawning();
         Destroy(this.gameObject);
+    }
+
+    public void AddToScore(int addToScore)
+    {
+        _score += addToScore;
+        _uiManager.UpdateScore(_score);
     }
 }

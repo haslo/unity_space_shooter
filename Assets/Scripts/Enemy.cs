@@ -6,10 +6,15 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3f;
+    private static Player _player;
 
     void Start()
     {
-        // noop
+        if (_player == null)
+        {
+            _player = GameObject.Find("Player").GetComponent<Player>();
+            Debug.Log(_player);
+        }
     }
 
     void Update()
@@ -35,6 +40,7 @@ public class Enemy : MonoBehaviour
         else if (other.tag == "DestructibleShot")
         {
             Destroy(other.gameObject);
+            _player.AddToScore(10);
             Damage();
         }
         else if (other.tag == "IndestructibleShot")
