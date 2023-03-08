@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class TripleShotPowerup : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3f;
@@ -28,28 +28,9 @@ public class Enemy : MonoBehaviour
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
-                player.Damage();
-                Damage();
+                player.Powerup();
+                Destroy(this.gameObject);
             }
         }
-        else if (other.tag == "DestructibleShot")
-        {
-            Destroy(other.gameObject);
-            Damage();
-        }
-        else if (other.tag == "IndestructibleShot")
-        {
-            Damage();
-        }
-    }
-
-    public void Damage()
-    {
-        Explode();
-    }
-
-    public void Explode()
-    {
-        Destroy(this.gameObject);
     }
 }

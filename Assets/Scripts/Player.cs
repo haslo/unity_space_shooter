@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _lives = 3;
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        _poweredUpShot = true;
+        _poweredUpShot = false;
     }
 
     void Update()
@@ -76,6 +76,18 @@ public class Player : MonoBehaviour
             }
             _nextFire = Time.time + _fireRate;
         }
+    }
+
+    public void Powerup()
+    {
+        _poweredUpShot = true;
+        StartCoroutine(Powerdown());
+    }
+
+    IEnumerator Powerdown()
+    {
+        yield return new WaitForSeconds(10f);
+        _poweredUpShot = false;
     }
 
     public void Damage()
