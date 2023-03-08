@@ -134,6 +134,7 @@ public class Player : MonoBehaviour
         else
         {
             _lives -= 1;
+            _uiManager.UpdateLives(_lives);
             if (_lives < 1)
             {
                 Explode();
