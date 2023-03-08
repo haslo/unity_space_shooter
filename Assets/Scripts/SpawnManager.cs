@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField]
+    private GameObject _enemyPrefab;
+    [SerializeField]
+    private Transform _mobsContainer;
+    private bool _canSpawn;
+
     void Start()
     {
-        
+        _canSpawn = true;
+        StartCoroutine(SpawnRoutine());
     }
 
-    // Update is called once per frame
-    void Update()
+    public void stopSpawning()
     {
-        
+        _canSpawn = false;
+    }
+
+    IEnumerator SpawnRoutine()
+    {
+        Debug.Log("a");
+        while (true)
+        {
+            Debug.Log("b");
+            if (_canSpawn)
+            {
+                Vector3 newPosition = new Vector3(Random.Range(-8f, 8f), 7.5f, 0);
+                GameObject newEnemy = Instantiate(_enemyPrefab, newPosition, Quaternion.identity);
+                newEnemy.transform.parent = _mobsContainer;
+                yield return new WaitForSeconds(Random.Range(1f, 4f));
+            }
+        }
     }
 }
