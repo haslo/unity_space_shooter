@@ -23,10 +23,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnRoutine()
     {
-        Debug.Log("a");
         while (true)
         {
-            Debug.Log("b");
             if (_canSpawn)
             {
                 Vector3 newPosition = new Vector3(Random.Range(-8f, 8f), 7.5f, 0);
