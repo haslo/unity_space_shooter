@@ -1540,6 +1540,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3910637994454299853, guid: 8284925032a2147118a6d6b97e4860f0, type: 3}
+      propertyPath: _spawnManager
+      value: 
+      objectReference: {fileID: 1660670934}
     - target: {fileID: 3910637994454299854, guid: 8284925032a2147118a6d6b97e4860f0, type: 3}
       propertyPath: m_Name
       value: Asteroid

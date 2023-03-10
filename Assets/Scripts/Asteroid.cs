@@ -8,6 +8,8 @@ public class Asteroid : MonoBehaviour
     private float _rotationSpeed;
     [SerializeField]
     private GameObject _explosionPrefab;
+    [SerializeField]
+    private GameObject _spawnManager;
     private bool _isDestroyed;
 
     void Start()
@@ -42,5 +44,6 @@ public class Asteroid : MonoBehaviour
         Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         _isDestroyed = true;
         Destroy(this.gameObject, 0.5f);
+        _spawnManager.GetComponent<SpawnManager>().StartSpawning();
     }
 }
