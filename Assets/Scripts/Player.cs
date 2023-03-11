@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _uiManagerObject;
     private UIManager _uiManager;
+    [SerializeField]
+    private GameObject[] _engines;
 
     private float _nextFire = 0.0f;
     private float _fireRate = 0.2f;
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
         _score = 0;
         _uiManager = _uiManagerObject.GetComponent<UIManager>();
         _uiManager.UpdateScore(_score);
+        StartCoroutine(EngineFires());
     }
 
     void Update()
@@ -52,7 +55,7 @@ public class Player : MonoBehaviour
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         transform.Translate(direction * _speed * (_speedy ? 2.0f : 1.0f) * Time.deltaTime);
 
-        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0.0f), 0);
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 3.8f), 0);
         if (transform.position.x < -11.3f)
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
@@ -139,6 +142,31 @@ public class Player : MonoBehaviour
             {
                 Explode();
             }
+        }
+    }
+
+    IEnumerator EngineFires()
+    {
+        while(true)
+        {
+            foreach (GameObject engine in _engines)
+            {
+                engine.SetActive(false);
+            }
+            for (int i = 0; i < 3 - _lives; i++)
+            {
+                bool activatedFire = false;
+                while (!activatedFire)
+                {
+                    GameObject engine = _engines[(int)Random.Range(0, 3)];
+                    if (!engine.activeSelf)
+                    {
+                        activatedFire = true;
+                        engine.SetActive(true);
+                    }
+                }
+            }
+            yield return new WaitForSeconds(Random.Range(0.1f, 5.0f));
         }
     }
 
