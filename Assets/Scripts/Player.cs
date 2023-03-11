@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
     [SerializeField]
     private GameObject[] _engines;
+    [SerializeField]
+    private GameObject _explosionPrefab;
 
     private float _nextFire = 0.0f;
     private float _fireRate = 0.2f;
@@ -24,6 +26,9 @@ public class Player : MonoBehaviour
     private float _speed = 6.0f;
     private bool _tripleShot, _shielded, _speedy;
     private int _score;
+
+    [SerializeField]
+    private GameObject _laserAudio;
 
     private SpawnManager _spawnManager;
 
@@ -75,11 +80,13 @@ public class Player : MonoBehaviour
             {
                 GameObject newLaser = Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
                 newLaser.transform.parent = _shotsContainer;
+                _laserAudio.GetComponent<AudioSource>().Play();
             }
             else
             {
                 GameObject newLaser = Instantiate(_laserPrefab, transform.position + (Vector3.up * 0.95f), Quaternion.identity);
                 newLaser.transform.parent = _shotsContainer;
+                _laserAudio.GetComponent<AudioSource>().Play();
             }
             _nextFire = Time.time + _fireRate / (_speedy ? 2.0f : 1.5f);
         }
@@ -173,7 +180,9 @@ public class Player : MonoBehaviour
     public void Explode()
     {
         _spawnManager.StopSpawning();
-        Destroy(this.gameObject);
+        Explosion.PlaySound();
+        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(this.gameObject, 0.5f);
     }
 
     public void AddToScore(int addToScore)

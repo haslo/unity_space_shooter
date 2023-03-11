@@ -16,10 +16,12 @@ public class Powerup : MonoBehaviour
     private float _speed = 3f;
     [SerializeField]
     private PowerupType _powerupType;
+    [SerializeField]
+    private GameObject _powerupAudio;
 
     void Start()
     {
-        // noop
+        _powerupAudio = GameObject.Find("/AudioManager/PowerUp");
     }
 
     void Update()
@@ -41,12 +43,15 @@ public class Powerup : MonoBehaviour
                 switch (_powerupType) {
                     case PowerupType.Shield:
                         player.ShieldPowerup();
+                        _powerupAudio.GetComponent<AudioSource>().Play();
                         break;
                     case PowerupType.TripleShot:
                         player.TripleShotPowerup();
+                        _powerupAudio.GetComponent<AudioSource>().Play();
                         break;
                     case PowerupType.Speed:
                         player.SpeedPowerup();
+                        _powerupAudio.GetComponent<AudioSource>().Play();
                         break;
                     default:
                         break;
