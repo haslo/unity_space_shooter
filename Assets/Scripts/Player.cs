@@ -186,6 +186,7 @@ public class Player : MonoBehaviour
     {
         _isDestroyed = true;
         _spawnManager.StopSpawning();
+        GameObject.Find("Thruster").SetActive(false);
         Explosion.PlaySound();
         GameObject explosionAnim = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         explosionAnim.transform.SetParent(this.transform);
