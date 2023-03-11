@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private float _speed = 6.0f;
     private bool _tripleShot, _shielded, _speedy;
     private int _score;
+    private bool _isDestroyed;
 
     [SerializeField]
     private GameObject _laserAudio;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
+        _isDestroyed = false;
         _lives = 3;
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         _tripleShot = false;
@@ -73,7 +75,7 @@ public class Player : MonoBehaviour
 
     void FirePrimaryWeapon()
     {
-        bool canShoot = Time.time >= _nextFire;
+        bool canShoot = Time.time >= _nextFire && !_isDestroyed;
         if (Input.GetKey(KeyCode.Space) && canShoot)
         {
             if (_tripleShot)
@@ -147,7 +149,7 @@ public class Player : MonoBehaviour
             _uiManager.UpdateLives(_lives);
             if (_lives < 1)
             {
-                Explode();
+                StartCoroutine(Explode());
             }
         }
     }
@@ -160,16 +162,19 @@ public class Player : MonoBehaviour
             {
                 engine.SetActive(false);
             }
-            for (int i = 0; i < 3 - _lives; i++)
+            if (!_isDestroyed)
             {
-                bool activatedFire = false;
-                while (!activatedFire)
+                for (int i = 0; i < 3 - _lives; i++)
                 {
-                    GameObject engine = _engines[(int)Random.Range(0, 3)];
-                    if (!engine.activeSelf)
+                    bool activatedFire = false;
+                    while (!activatedFire)
                     {
-                        activatedFire = true;
-                        engine.SetActive(true);
+                        GameObject engine = _engines[(int)Random.Range(0, 3)];
+                        if (!engine.activeSelf)
+                        {
+                            activatedFire = true;
+                            engine.SetActive(true);
+                        }
                     }
                 }
             }
@@ -177,12 +182,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Explode()
+    IEnumerator Explode()
     {
+        _isDestroyed = true;
         _spawnManager.StopSpawning();
         Explosion.PlaySound();
-        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
-        Destroy(this.gameObject, 0.5f);
+        GameObject explosionAnim = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        explosionAnim.transform.SetParent(this.transform);
+        yield return new WaitForSeconds(0.5f);
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
     }
 
     public void AddToScore(int addToScore)
